@@ -472,17 +472,17 @@ function getSnapshotPair() {
 }
 
 function diffSnapshots(curr, prev) {
-  if (!prev) return curr.clans.map(g => ({ ...g, repDelta: null, rankDelta: null, isNew: false }));
+  if (!prev) return curr.guilds.map(g => ({ ...g, repDelta: null, rankDelta: null, isNew: false }));
 
   const prevGroups = {};
-  for (const g of prev.clans) {
+  for (const g of prev.guilds) {
     const k = g.name + '|' + g.abbr;
     if (!prevGroups[k]) prevGroups[k] = [];
     prevGroups[k].push(g);
   }
 
   const used = new Set();
-  return curr.clans.map(g => {
+  return curr.guilds.map(g => {
     const k = g.name + '|' + g.abbr;
     const candidates = (prevGroups[k] || []).filter(c => !used.has(c.rank));
     if (!candidates.length) return { ...g, repDelta: null, rankDelta: null, isNew: true };
@@ -653,7 +653,7 @@ function getClanHistory(g) {
   const result = [];
   for (const s of snapshots) {
     const key = g.name + '|' + g.abbr;
-    const candidates = s.clans.filter(x => x.name + '|' + x.abbr === key);
+    const candidates = s.guilds.filter(x => x.name + '|' + x.abbr === key);
     if (!candidates.length) continue;
     const best = candidates.reduce((a, b) => Math.abs(a.rank - lastRank) <= Math.abs(b.rank - lastRank) ? a : b);
     lastRank = best.rank;
